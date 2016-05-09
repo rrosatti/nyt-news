@@ -6,4 +6,10 @@
 
     <!-- Menu Title -->
     <string name="articles_title">Articles</string>
+
+    <!-- Hint -->
+    <string name="query_example">Ex: android, technology</string>
+
+    <!-- Dialog -->
+    <string name="query_dialog_message">What are you looking for?</string>
 </resources>

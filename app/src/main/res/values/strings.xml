@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">NYT News</string>
+
+    <!-- Menu Item -->
+    <string name="search_article_menu_item">Search Articles</string>
+
+    <!-- Menu Title -->
+    <string name="articles_title">Articles</string>
 </resources>

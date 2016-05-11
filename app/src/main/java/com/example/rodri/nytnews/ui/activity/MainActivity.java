@@ -2,6 +2,7 @@ package com.example.rodri.nytnews.ui.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +15,13 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.rodri.nytnews.R;
+import com.example.rodri.nytnews.article.Article;
+import com.example.rodri.nytnews.json.RemoteFetch;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     private LayoutInflater inflater;
     private View view;
+
+    private String query;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,13 +86,70 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(MainActivity.this, "query: " + etQuery.getText().toString(), Toast.LENGTH_LONG).show();
+                query = etQuery.getText().toString();
+                if (query.equals("")) {
+                    Toast.makeText(MainActivity.this, "You must say something!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
         });
 
         builder.show();
 
 
+    }
+
+    public class ParseJSONAsyncTask extends AsyncTask<String, Integer, ArrayList<Article>> {
+
+        JSONArray articleVenueArray;
+        ArrayList<Article> articleList = new ArrayList<>();
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected ArrayList<Article> doInBackground(String... params) {
+            try {
+
+                RemoteFetch remoteFetch = new RemoteFetch();
+                JSONObject json;
+
+                if (query.equals("")) {
+                    json = remoteFetch.getJSON("android");
+                } else {
+                    json = remoteFetch.getJSON(query);
+                }
+
+                articleVenueArray = json.getJSONObject("response").getJSONArray("docs");
+
+                for (int i = 0; i < articleVenueArray.length(); i++) {
+                    JSONObject data = articleVenueArray.getJSONObject(i);
+                    Article article = new Article();
+
+                    article.setBody(data.optString("lead_paragraph"));
+                    article.setDate(data.optString("pub_date"));
+                    article.setTitle(data.optString("snippet"));
+                    article.setUrl(data.optString("web_url"));
+
+                    articleList.add(article);
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return articleList;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Article> articles) {
+            super.onPostExecute(articles);
+
+
+        }
     }
 
 }

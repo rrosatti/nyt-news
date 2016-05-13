@@ -14,9 +14,9 @@ import java.net.URL;
  */
 public class RemoteFetch {
 
-    private static final String NYT_KEY = "123456";
+    private static final String NYT_KEY = "0a3792df6de44dbcac1814bdd51cc074";
     private static final String SEARCH_NYTIMES_API =
-            "http://api.nytimes.com/svc/search/v1/article?format=json&&api-key=" + NYT_KEY;
+            "http://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + NYT_KEY;
 
     public JSONObject getJSON(String query) {
         String stringURL = SEARCH_NYTIMES_API;
@@ -38,7 +38,7 @@ public class RemoteFetch {
 
             JSONObject data = new JSONObject(json.toString());
 
-            if (data.getJSONObject("response").getJSONObject("meta").getInt("code") != 200) {
+            if (data == null) {
                 return null;
             }
 

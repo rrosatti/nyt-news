@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.rodri.nytnews.R;
 import com.example.rodri.nytnews.article.Article;
 import com.example.rodri.nytnews.json.RemoteFetch;
+import com.example.rodri.nytnews.ui.adapter.ArticleAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,11 +28,12 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView articlesListView;
     private EditText etQuery;
+    private ArticleAdapter adapter;
 
     private LayoutInflater inflater;
     private View view;
 
-    private String query;
+    private String query = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         initialize();
         initializeCustomComponents();
         this.setTitle(R.string.articles_title);
+
+        new ParseJsonAsyncTask().execute();
     }
 
     @Override
@@ -99,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public class ParseJSONAsyncTask extends AsyncTask<String, Integer, ArrayList<Article>> {
+    public class ParseJsonAsyncTask extends AsyncTask<String, Integer, ArrayList<Article>> {
 
         JSONArray articleVenueArray;
         ArrayList<Article> articleList = new ArrayList<>();
@@ -147,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<Article> articles) {
             super.onPostExecute(articles);
+
+            adapter = new ArticleAdapter(MainActivity.this, 0, articles);
+            articlesListView.setAdapter(adapter);
 
 
         }

@@ -11,7 +11,11 @@ import android.widget.TextView;
 import com.example.rodri.nytnews.R;
 import com.example.rodri.nytnews.article.Article;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by rodri on 5/12/2016.
@@ -68,8 +72,32 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         Article article = articles.get(position);
         holder.displayBody.setText(article.getBody());
         holder.displayTitle.setText(article.getTitle());
-        holder.displayDate.setText(article.getDate());
         holder.displayUrl.setText(article.getUrl());
+
+        /*SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date d = sdf.parse(article.getDate());
+            System.out.println("before: " + article.getDate());
+            String date = sdf.format(d);
+            System.out.println("after: " + date);
+            holder.displayDate.setText(date);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        try {
+            if (article.getDate() != null) {
+                //System.out.println("Fuck this date -> " + article.getDate());
+                Date date = format.parse(article.getDate());
+                holder.displayDate.setText(date.getDay() + 1 + "/" + (date.getMonth() + 1) + "/" + (date.getYear() + 1900));
+            } else {
+                holder.displayDate.setText("no date found");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         return v;
     }

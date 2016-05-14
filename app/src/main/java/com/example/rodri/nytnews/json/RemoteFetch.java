@@ -16,7 +16,7 @@ public class RemoteFetch {
 
     private static final String NYT_KEY = "0a3792df6de44dbcac1814bdd51cc074";
     private static final String SEARCH_NYTIMES_API =
-            "http://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + NYT_KEY + "&begin_date=20160101&end_date=20160109";
+            "http://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + NYT_KEY;
 
     public JSONObject getJSON(String query) {
         String stringURL = SEARCH_NYTIMES_API;

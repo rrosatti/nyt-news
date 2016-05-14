@@ -23,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -94,6 +95,9 @@ public class MainActivity extends AppCompatActivity {
                 if (query.equals("")) {
                     Toast.makeText(MainActivity.this, "You must say something!", Toast.LENGTH_SHORT).show();
                     return;
+                } else {
+                    verifyQuery();
+                    new ParseJsonAsyncTask().execute();
                 }
             }
         });
@@ -132,13 +136,18 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject data = articleVenueArray.getJSONObject(i);
                     Article article = new Article();
 
-                    article.setBody(data.optString("lead_paragraph"));
                     article.setTitle(data.optString("snippet"));
                     article.setUrl(data.optString("web_url"));
-                    if (data.optString("pub_date") != null)
+
+                    if (!data.optString("lead_paragraph").equals("null"))
+                        article.setBody(data.optString("lead_paragraph"));
+                    else
+                        article.setBody("Description not found");
+
+                    if (!data.optString("pub_date").equals("null"))
                         article.setDate(data.optString("pub_date"));
                     else
-                        article.setDate("date not found");
+                        article.setDate("Date not found");
 
 
                     articleList.add(article);
@@ -160,6 +169,22 @@ public class MainActivity extends AppCompatActivity {
             articlesListView.setAdapter(adapter);
 
 
+        }
+    }
+
+    public void verifyQuery() {
+        try {
+            StringTokenizer tokenizer = new StringTokenizer(query, " ");
+            String tmp = "";
+            while (tokenizer.hasMoreElements()) {
+                tmp += tokenizer.nextElement() + "+";
+            }
+            // remove the last '+' sign
+            //tmp = tmp.replace(tmp.substring(tmp.length() - 1), "");
+            System.out.println("look at -> " + tmp);
+            query = tmp;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -133,9 +133,13 @@ public class MainActivity extends AppCompatActivity {
                     Article article = new Article();
 
                     article.setBody(data.optString("lead_paragraph"));
-                    article.setDate(data.optString("pub_date"));
                     article.setTitle(data.optString("snippet"));
                     article.setUrl(data.optString("web_url"));
+                    if (data.optString("pub_date") != null)
+                        article.setDate(data.optString("pub_date"));
+                    else
+                        article.setDate("date not found");
+
 
                     articleList.add(article);
                 }

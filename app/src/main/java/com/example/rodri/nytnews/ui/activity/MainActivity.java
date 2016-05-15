@@ -9,9 +9,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.example.rodri.nytnews.R;
@@ -23,18 +26,26 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
 
     private ListView articlesListView;
+    private ArticleAdapter articleAdapter;
+
+    // variables from custom_search_article_dialog
     private EditText etQuery;
-    private ArticleAdapter adapter;
+    private EditText etPageNumber;
+    private Spinner sortSpinner;
 
     private LayoutInflater inflater;
     private View view;
 
     private String query = "";
+    private ArrayList<String> sortOptions;
+    private ArrayAdapter<String> spinnerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         initialize();
         initializeCustomComponents();
         this.setTitle(R.string.articles_title);
+
 
         new ParseJsonAsyncTask().execute();
     }
@@ -69,10 +81,21 @@ public class MainActivity extends AppCompatActivity {
         inflater = getLayoutInflater();
     }
 
+    /**
+     *
+     * Initialize components related to the custom article dialog.
+     *
+     */
     public void initializeCustomComponents() {
         view = inflater.inflate(R.layout.custom_search_article_dialog, null);
 
         etQuery = (EditText) view.findViewById(R.id.etQuery);
+        etPageNumber = (EditText) view.findViewById(R.id.etPageNumber);
+        sortSpinner = (Spinner) view.findViewById(R.id.sortArticlesSpinner);
+
+        sortOptions = new ArrayList<>(Arrays.asList("sort", "oldest", "newest"));
+        spinnerAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_spinner_item, sortOptions);
+        sortSpinner.setAdapter(spinnerAdapter);
     }
 
     public void showSearchArticleDialog() {
@@ -165,13 +188,18 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<Article> articles) {
             super.onPostExecute(articles);
 
-            adapter = new ArticleAdapter(MainActivity.this, 0, articles);
-            articlesListView.setAdapter(adapter);
+            articleAdapter = new ArticleAdapter(MainActivity.this, 0, articles);
+            articlesListView.setAdapter(articleAdapter);
 
 
         }
     }
 
+    /**
+     *
+     *  Verify if the query has multiple words and split it with '+' signs.
+     *
+     */
     public void verifyQuery() {
         try {
             StringTokenizer tokenizer = new StringTokenizer(query, " ");
@@ -179,9 +207,6 @@ public class MainActivity extends AppCompatActivity {
             while (tokenizer.hasMoreElements()) {
                 tmp += tokenizer.nextElement() + "+";
             }
-            // remove the last '+' sign
-            //tmp = tmp.replace(tmp.substring(tmp.length() - 1), "");
-            System.out.println("look at -> " + tmp);
             query = tmp;
         } catch (Exception e) {
             e.printStackTrace();

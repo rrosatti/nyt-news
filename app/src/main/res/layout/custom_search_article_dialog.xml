@@ -12,4 +12,45 @@
         android:textStyle="italic"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_parameters"
+        android:textSize="10pt"
+        android:textStyle="bold"
+        android:id="@+id/txtAddParameters"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="15dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp">
+
+        <EditText
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/etPageNumber"
+            android:inputType="number"
+            android:hint="@string/page_number"
+            android:textStyle="italic"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="left"
+            android:layout_weight="2"/>
+
+        <Spinner
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/sortArticlesSpinner"
+            android:layout_gravity="right"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+
+
 </LinearLayout>

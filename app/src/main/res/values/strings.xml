@@ -9,7 +9,15 @@
 
     <!-- Hint -->
     <string name="query_example">Ex: android, technology</string>
+    <string name="page_number">page number</string>
 
     <!-- Dialog -->
     <string name="query_dialog_message">What are you looking for?</string>
+    <string name="add_parameters">Add parameters</string>
+
+    <!-- Sort array  -->
+    <string name="sort">sort</string>
+    <string name="oldest">oldest</string>
+    <string name="newest">newest</string>
+
 </resources>

@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private View view;
 
     private String query = "";
-    private ArrayList<String> sortOptions;
+    private List<String> sortOptions;
     private ArrayAdapter<String> spinnerAdapter;
 
     @Override
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         etPageNumber = (EditText) view.findViewById(R.id.etPageNumber);
         sortSpinner = (Spinner) view.findViewById(R.id.sortArticlesSpinner);
 
-        sortOptions = new ArrayList<>(Arrays.asList("sort", "oldest", "newest"));
+        sortOptions = Arrays.asList(getResources().getStringArray(R.array.sort_list));
         spinnerAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_spinner_item, sortOptions);
         sortSpinner.setAdapter(spinnerAdapter);
     }

@@ -7,7 +7,7 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:id="@+id/txtSpinnerItem"
-        android:textSize="9pt"
-        android:padding="2dp" />
+        android:textSize="10pt"
+        android:padding="3dp" />
 
 </LinearLayout>

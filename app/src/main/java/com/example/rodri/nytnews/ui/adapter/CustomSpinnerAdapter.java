@@ -66,7 +66,12 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
             holder = (ViewHolder) v.getTag();
         }
 
-        holder.displayItem.setText(items.get(position));
+        if (position == 0) {
+            holder.displayItem.setText(R.string.sort);
+        } else {
+            holder.displayItem.setText(items.get(position));
+        }
+
 
         return v;
     }

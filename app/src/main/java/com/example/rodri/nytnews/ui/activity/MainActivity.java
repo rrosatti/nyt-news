@@ -9,18 +9,18 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.example.rodri.nytnews.R;
 import com.example.rodri.nytnews.article.Article;
 import com.example.rodri.nytnews.json.RemoteFetch;
 import com.example.rodri.nytnews.ui.adapter.ArticleAdapter;
+import com.example.rodri.nytnews.ui.adapter.CustomSpinnerAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,8 +44,10 @@ public class MainActivity extends AppCompatActivity {
     private View view;
 
     private String query = "";
+    private String pageNumber = "";
+    private String sortParameter = "";
     private List<String> sortOptions;
-    private ArrayAdapter<String> spinnerAdapter;
+    private CustomSpinnerAdapter spinnerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,17 @@ public class MainActivity extends AppCompatActivity {
         initializeCustomComponents();
         this.setTitle(R.string.articles_title);
 
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sortParameter = sortSpinner.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         new ParseJsonAsyncTask().execute();
     }
@@ -94,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         sortSpinner = (Spinner) view.findViewById(R.id.sortArticlesSpinner);
 
         sortOptions = Arrays.asList(getResources().getStringArray(R.array.sort_list));
-        spinnerAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_spinner_item, sortOptions);
+        spinnerAdapter = new CustomSpinnerAdapter(MainActivity.this, 0, sortOptions);
         sortSpinner.setAdapter(spinnerAdapter);
     }
 
@@ -120,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 } else {
                     verifyQuery();
+                    pageNumber = etPageNumber.getText().toString();
                     new ParseJsonAsyncTask().execute();
                 }
             }
@@ -147,10 +161,18 @@ public class MainActivity extends AppCompatActivity {
                 RemoteFetch remoteFetch = new RemoteFetch();
                 JSONObject json;
 
+                String[] parameters = new String[3];
+
                 if (query.equals("")) {
-                    json = remoteFetch.getJSON("android");
+                    parameters[0] = "android";
+                    parameters[1] = "";
+                    parameters[2] = "";
+                    json = remoteFetch.getJSON(parameters);
                 } else {
-                    json = remoteFetch.getJSON(query);
+                    parameters[0] = query;
+                    parameters[1] = pageNumber;
+                    parameters[2] = sortParameter;
+                    json = remoteFetch.getJSON(parameters);
                 }
 
                 articleVenueArray = json.getJSONObject("response").getJSONArray("docs");

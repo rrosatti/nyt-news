@@ -1,7 +1,5 @@
 package com.example.rodri.nytnews.json;
 
-import com.example.rodri.nytnews.R;
-
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -18,9 +16,24 @@ public class RemoteFetch {
     private static final String SEARCH_NYTIMES_API =
             "http://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + NYT_KEY;
 
-    public JSONObject getJSON(String query) {
+    /**
+     *
+     * Items from the parameters vector:
+     * p[0] = query
+     * p[1] = page number
+     * p[2] = sort
+     *
+     * @param parameters
+     * @return
+     */
+    public JSONObject getJSON(String[] parameters) {
         String stringURL = SEARCH_NYTIMES_API;
-        stringURL  += "&q=" + query;
+
+        stringURL  += "&q=" + parameters[0];
+        if (!parameters[1].equals(""))
+            stringURL += "&page=" + parameters[1];
+        if (!parameters[2].equals(""))
+            stringURL += "&sort=" + parameters[2];
 
         try {
 
